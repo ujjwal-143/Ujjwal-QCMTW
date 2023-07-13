@@ -1,0 +1,527 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Template Website</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-route.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-secondary navbar-fixed-top ">
+      <a class="navbar-brand" href="index.html">Template Website</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+
+        <span class="navbar-toggler-icon"></span>
+
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contactUS">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login.html">Login</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Jumbotron -->
+    <div class="jumbotron jumbotron-fluid" id="services">
+      <div class="container">
+        <h1 class="display-3">Welcome to my website</h1>
+        <p class="lead">
+          This is a template website where people can view and download
+          templates.
+        </p>
+        <a class="btn btn-primary btn-lg" href="dashboard.html" role="button"
+          >Generate New Joke</a> <span> &nbsp;&nbsp; OR</span> <br>
+
+        <h6>Refresh Website to see a new Joke </h6>
+
+
+
+
+        
+        <select id="categoryDropdown" class="btn btn-primary dropdown-toggle" onchange="fetchJoke()" class="form-select">
+          <option value="" disabled selected>Select a joke category</option>
+          <option value="Programming">Programming</option>
+          <option value="Misc">Misc</option>
+          <option value="Pun">Pun</option>
+          <option value="Spooky">Spooky</option>
+          <option value="Christmas">Christmas</option>
+          <!-- <option value="nsfw">NSFW</option>
+          <option value="religious">Religious</option>
+          <option value="racist">Racist</option>  -->
+          
+        </select>
+        <h3><div id="apiJokeGenerator"></div></h3>
+
+
+
+
+       
+
+
+
+
+
+
+
+<!-- Fetching Data From An JokeAPI -->
+        <script>
+          var baseURL = "https://v2.jokeapi.dev";
+          var categories = [
+            "Programming",
+            "Misc",
+            "Pun",
+            "Spooky",
+            "Christmas",
+          ];
+          var params = [
+            "blacklistFlags=nsfw,religious,racist",
+            "idRange=0-100",
+          ];
+        
+          var url =
+            baseURL + "/joke/" + categories.join(",") + "?" + params.join("&");
+        
+          $http.get(url)
+            .then(function(response) {
+              var randomJoke = response.data;
+        
+              if (randomJoke.type == "single") {
+                // If type == "single", the joke only has the "joke" property
+                angular.element("#apiJokeGenerator").append(
+                  "<div>" + randomJoke.joke + "</div>"
+                );
+              } else {
+                // If type == "twopart", the joke has the "setup" and "delivery" properties
+                angular.element("#apiJokeGenerator").append(
+                  "<div>" + randomJoke.setup + "</div>"
+                );
+                angular.element("#apiJokeGenerator").append(
+                  "<div>" + randomJoke.delivery + "</div>"
+                );
+              }
+            })
+            .catch(function(error) {
+              var errorMessage =
+                "Error while requesting joke.\n\nStatus code: " +
+                error.status +
+                "\nServer response: " +
+                error.data;
+              alert(errorMessage);
+            });
+          </script> 
+
+
+
+
+
+
+
+
+<!-- Fetching Data by the Category -->
+
+<script>
+  function fetchJoke() {
+  var selectedCategory = document.getElementById('categoryDropdown').value;
+  if (!selectedCategory) {
+    return; // No category selected, exit function
+  }
+  
+  var baseURL = "https://v2.jokeapi.dev";
+  var blacklistFlags = "nsfw,religious,racist";
+  var idRange = "0-100";
+  var url = `${baseURL}/joke/${selectedCategory}?blacklistFlags=${blacklistFlags}&idRange=${idRange}`;
+  
+  fetch(url)
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Error while requesting joke. Server response: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      var jokeContent = '';
+      if (data.type === "single") {
+        jokeContent = data.joke;
+      } else if (data.type === "twopart") {
+        jokeContent = data.setup + "<br>" + data.delivery;
+      }
+      document.getElementById('apiJokeGenerator').innerHTML = jokeContent;
+    })
+    .catch(function(error) {
+      alert(error.message);
+    });
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <h3 id="apiJokeGenerator"></h3>
+
+           <!-- Displaying Meme Jokes  -->
+          <div id="meme-jokes"></div>
+
+
+          <script>
+            var baseURL = "https://v2.jokeapi.dev";
+            var categories = [
+              "Programming",
+              "Misc",
+              "Pun",
+              "Spooky",
+              "Christmas",
+            ];
+            var params = [
+              "blacklistFlags=nsfw,religious,racist",
+              "idRange=0-100",
+            ];
+
+            var xhr = new XMLHttpRequest();
+            xhr.open(
+              "GET",
+              baseURL + "/joke/" + categories.join(",") + "?" + params.join("&")
+            );
+
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState == 4 && xhr.status < 300) {
+                // readyState 4 means request has finished + we only want to parse the joke if the request was successful (status code lower than 300)
+                var randomJoke = JSON.parse(xhr.responseText);
+
+                if (randomJoke.type == "single") {
+                  // If type == "single", the joke only has the "joke" property
+                  $("#apiJokeGenerator").append(
+                    "<div>" + randomJoke.joke + "</div>"
+                  );
+                } else {
+                  // If type == "single", the joke only has the "joke" property
+                  $("#apiJokeGenerator").append(
+                    "<div>" + randomJoke.setup + "</div>"
+                  );
+                  $("#apiJokeGenerator").append(
+                    "<div>" + randomJoke.delivery + "</div>"
+                  );
+                }
+              } else if (xhr.readyState == 4) {
+                alert(
+                  "Error while requesting joke.\n\nStatus code: " +
+                    xhr.status +
+                    "\nServer response: " +
+                    xhr.responseText
+                );
+              }
+            };
+
+            xhr.send();
+          </script> 
+
+          <div>
+            <!-- Jumbotron -->
+            <div class="jumbotron jumbotron-fluid">
+              <div class="container">
+                <h1 class="display-4">Meme Templates</h1>
+
+                <p class="lead">
+                  This is a template website where people can view and download
+                  templates.
+                </p>
+              </div>
+            </div>
+
+            
+
+
+
+
+
+
+
+
+
+
+
+            <input type="text" id="searchInput" placeholder="Search meme here...">
+            <button class="btn btn-primary btn-sm">Search...</button>
+            <!-- Gallery -->
+            <div class="container" id="gallery">
+              <div class="row">
+                <div class="col-md-4">
+                  <img src="images\change my meme.jpeg" class="img-fluid" />
+                  <p class="meme-description">Change My Mind                   
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img" src="download-button-img.png" alt=""></a>
+                  </p>
+
+                  
+                </div>
+                <div class="col-md-4">
+                  <a href="images\confused guy.jpeg" data-lightbox="gallery">
+                    <img src="images\confused guy.jpeg" class="img-fluid" />
+                  </a>
+                  <p class="meme-description">Confused Guy 
+                  <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    src="images\distracted boyfriend Two girls one guy meme.jpeg"  class="img-fluid" />
+                  <p class="meme-description">Distracted Boyfriend Two Girls One Guy 
+                  <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    src="images\Drake Hotline bling meme.jpeg"  class="img-fluid"/>
+                  <p class="meme-description">Drake Hotline bling meme
+                  <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    src="images\guy holding cardboard sign meme.jpeg" class="img-fluid" />
+                  <p class="meme-description">Guy Holding Cardboard Sign meme
+                  <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a></p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    src="images\I bet he is thinking about other women.jpeg" class="img-fluid"/>
+                    <p class="meme-description">I bet he is thinking of other women
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                  </div>
+
+
+                <div class="col-md-4">
+                  <img
+                    src="images\You got i receive.jpeg" class="img-fluid"/>
+                    <p class="meme-description">You got I receive
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                </div>
+
+
+                <div class="col-md-4">
+                  <img
+                    src="images\Two button blank meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Two button blank meme
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                
+                  </div>
+
+
+                <div class="col-md-4">
+                  <img
+                    src="images\spiderman triple pointing out each other meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Spiderman triple pointing out eachther
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                  </div>
+
+
+                <div class="col-md-4">
+                  <img
+                    src="images\running away balloon meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Running away balloon meme
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                </div>
+
+                
+                <div class="col-md-4">
+                  <img
+                    src="images\sad pablo escobar meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Sad pablo escobar meme              
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    src="images\panik kalm panik meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Panik kalm panik meme
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                </div><div class="col-md-4">
+                  <img
+                    src="images\Mr bean waiting meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Mr bean waiting meme
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                  <img
+                    src="images\Left exit 12 off ramp meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Left exit 12 off ramp meme
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>
+                </div>
+
+                <div class="col-md-4">
+                  <img
+                    src="images\khaby lame meme.jpeg" class="img-fluid"/>
+                    <p class="meme-description">Khaby lame meme
+                    <a href="images\change my meme.jpeg" download class="download-button"><img class="download-button-img"src="download-button-img.png" alt="download-button-img.png"></a>
+                    </p>  
+                </div>
+
+                <script>
+                  function performSearch() {
+                  var searchQuery = document.getElementById('searchInput').value.toLowerCase();
+                  var galleryItems = document.querySelectorAll('#gallery .col-md-4');
+
+                  for (var i = 0; i < galleryItems.length; i++) {
+                  var item = galleryItems[i];
+                  var description = item.querySelector('.meme-description').textContent.toLowerCase();
+
+                  if (description.includes(searchQuery)) {
+                  item.style.display = 'block';
+                  } else {
+                  item.style.display = 'none';
+                  }
+                }
+              }
+
+                document.getElementById('searchInput').addEventListener('input', performSearch);
+
+                </script>
+
+                
+
+               
+                <!-- jQuery, Popper.js, and Bootstrap JS -->
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+              </div>
+            </div>
+          </div>
+        </h1>
+      </div>
+    </div>
+
+
+
+
+     <!-- Main Content -->
+     <div class="container">
+      <div class="row">
+        <div class="feature-box col-lg-6">
+              <h5><b>About Us</b> </h5>
+              <p>
+                This website is dedicated to providing users with a collection of memes and templates for various purposes. Whether you're looking for a funny meme or a template to create your own content, 
+                we've got you covered. Feel free to browse through our collection and download the ones you like.
+              </p>
+        </div>
+
+        <div class="feature-box col-lg-6" id="about">
+          <h2>What we do</h2>
+          <p>
+            Access to a wide range of meme templates
+            Ability to download and use the templates for personal or commercial purposes
+            Regular updates with new meme templates
+            User-friendly interface for easy navigation
+            Here you can find different kinds of templates.
+          </p>
+
+        </div>
+      </div>
+      </div>
+
+
+
+    <!-- Footer -->
+
+    <div id="footer" >
+      <footer class="footer bg-dark text-light foot">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4" id="contactUS">
+              <h2>Contact Us</h2>
+              
+              <p>Meerut, India 250004</p>
+              <p>Phone: 741773092</p>
+              <p>Email: ujjwal.sharma.cse47@gmail.com</p>
+            </div>
+            
+            <div class="col-md-3">
+              <h5>Links</h5>
+              <ul class="list-unstyled">
+                <li><a href="dashboard.html">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contactUS">Contact</a></li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              <h5>Follow Us</h5>
+              <ul class="list-unstyled">
+                <li>
+                  <a href="https://www.facebook.com/profile.php?id=100015573257919" target="_blank"
+                    ><i class="fab fa-facebook"></i> Facebook</a
+                  >
+                </li>
+                <li>
+                  <a href="https://twitter.com/UjjwalSharma1_9" target="_blank"
+                    ><i class="fab fa-twitter"></i> Twitter</a
+                  >
+                </li>
+                <li>
+                  <a href="https://www.instagram.com/stfujjwal/" target="_blank"> <i class="fab fa-instagram"></i> Instagram</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <hr />
+          <div class="text-center foot">
+            <p>&copy; 2023 Love from Ujjwal ❤️. All Rights Reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>
+
+
+
+
+

@@ -1,0 +1,99 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Ayush",
+      "email": "Lucknow@mail.com",
+      "password": "abc"
+    },
+    {
+      "name": "abc",
+      "email": "abc@mail.com",
+      "password": "abc",
+      "id": 2
+    },
+    {
+      "name": "Prashant",
+      "email": "Prashant@gmail.com",
+      "password": "abc",
+      "id": 3
+    },
+    {
+      "email": "testug@example.com",
+      "password": "password6",
+      "id": 4
+    },
+    {
+      "email": "vnhbgff@gmail.com",
+      "password": "asRG3CUi!yBFK!",
+      "name": "vnhb",
+      "id": 5
+    },
+    {
+      "name": "Psp",
+      "email": "as@gmail.com",
+      "password": "adc",
+      "id": 6
+    },
+    {
+      "name": "Psp",
+      "email": "s@gmail.com",
+      "password": "asc",
+      "id": 7
+    },
+    {
+      "name": "ksp",
+      "email": "Ksp@gmail.com",
+      "password": "ksp",
+      "id": 8
+    },
+    {
+      "name": "Pdp",
+      "email": "pdp@gmail.com",
+      "password": "pdp",
+      "id": 9
+    },
+    {
+      "name": "Ujjwal",
+      "email": "ujjwal@gmail.com",
+      "password": "Ujjwal@12313",
+      "id": 10
+    },
+    {
+      "name": "UjjwalSharma",
+      "email": "ujjwal1234@gmail.com",
+      "password": "Ujjwal@1234",
+      "id": 11
+    },
+    {
+      "name": "Nandini",
+      "email": "Nandini@gmail.com",
+      "password": "Nandini@1212",
+      "id": 12
+    },
+    {
+      "name": "UjjwalTest01",
+      "email": "UjjwalTest01@gmail.com",
+      "password": "UjjwalTest01",
+      "id": 13
+    },
+    {
+      "name": "Name01",
+      "email": "name01@gmail.com",
+      "password": "Name01@",
+      "id": 14
+    },
+    {
+      "name": "Satyam Triathi",
+      "email": "satyam12@gmail.com",
+      "password": "satyam12@",
+      "id": 15
+    },
+    {
+      "name": "Vaibhav",
+      "email": "vaibhav12@gmail.com",
+      "password": "Kumar@123",
+      "id": 16
+    }
+  ]
+}
